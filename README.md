@@ -1,4 +1,4 @@
-##How to run?
+## How to run?
 
 Clone the repository to your PC.
 Run ```npm install``` in the root folder to install the dependencies.
