@@ -11,17 +11,8 @@ ReactDOM.render(
   <Router basename={process.env.PUBLIC_URL}>
     <Search />
     <Switch>
-      <Route
-        exact
-        path={"/search/:track/"}
-        render={routerProps => <Results routerProps={routerProps} />}
-      />
-      <Route
-        exact
-        path={"/lyrics/:id/"}
-        render={routerProps => <Lyrics routerProps={routerProps} />}
-      />{" "}
-      />
+      <Route exact path="/search/:track/" component={Results} />
+      <Route exact path="/lyrics/:id/" component={Lyrics} />
     </Switch>
   </Router>,
   document.getElementById("root")

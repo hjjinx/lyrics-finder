@@ -8,7 +8,7 @@ export default class Lyrics extends React.Component {
     lyrics: []
   };
   async componentDidMount() {
-    const id = this.props.routerProps.match.params.id;
+    const id = this.props.match.params.id;
     let name = await Axios.get(
       `https://api.musixmatch.com/ws/1.1/track.get?apikey=${api_key}&commontrack_id=${id}`
     );

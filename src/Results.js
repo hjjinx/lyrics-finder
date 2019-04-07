@@ -13,10 +13,23 @@ export default class Results extends React.Component {
     };
   }
 
+  track = "";
+  artist = "";
+  lyrics = "";
   scroll = 0;
 
+  componentDidMount = async () => {
+    this.reload();
+    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener("hashchange", this.reload);
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("hashchange", this.reload);
+  }
+
   async getResults(page) {
-    console.log(page);
     let res = await Axios.get(
       `https://api.musixmatch.com/ws/1.1/track.search?apikey=${api_key}&q_track=${
         this.track
@@ -28,14 +41,8 @@ export default class Results extends React.Component {
     return res;
   }
 
-  track = "";
-  artist = "";
-  lyrics = "";
-
-  componentDidMount = async () => {
-    const { track, artist, lyrics } = JSON.parse(
-      this.props.routerProps.match.params.track
-    );
+  reload = async () => {
+    const { track, artist, lyrics } = JSON.parse(this.props.match.params.track);
     this.track = track;
     this.artist = artist;
     this.lyrics = lyrics;
@@ -45,32 +52,32 @@ export default class Results extends React.Component {
     this.setState({
       results: res
     });
+  };
 
-    window.addEventListener("scroll", async () => {
-      this.scroll =
-        document.body.scrollHeight - window.innerHeight - window.scrollY;
-      if (this.state.sentRequest) return;
-      if (this.scroll < 100) {
-        this.setState({
-          page: this.state.page + 1,
-          sentRequest: true
-        });
-        let res = await this.getResults(this.state.page);
-        if (res.message.header.status_code !== 200) {
-          this.setState({
-            page: this.state.page - 1
-          });
-          return;
-        }
-        res = res.message.body.track_list;
-        const newRes = [...this.state.results, ...res];
-        this.setState({
-          results: newRes
-        });
-      }
+  onScroll = async () => {
+    this.scroll =
+      document.body.scrollHeight - window.innerHeight - window.scrollY;
+    if (this.state.sentRequest) return;
+    if (this.scroll < 100) {
       this.setState({
-        sentRequest: false
+        page: this.state.page + 1,
+        sentRequest: true
       });
+      let res = await this.getResults(this.state.page);
+      if (res.message.header.status_code !== 200) {
+        this.setState({
+          page: this.state.page - 1
+        });
+        return;
+      }
+      res = res.message.body.track_list;
+      const newRes = [...this.state.results, ...res];
+      this.setState({
+        results: newRes
+      });
+    }
+    this.setState({
+      sentRequest: false
     });
   };
 
