@@ -10,7 +10,7 @@ export default class Lyrics extends React.Component {
   async componentDidMount() {
     const id = this.props.match.params.id;
     let name = await Axios.get(
-      `https://api.musixmatch.com/ws/1.1/track.get?apikey=${api_key}&commontrack_id=${id}`
+      `/track.get?apikey=${api_key}&commontrack_id=${id}`
     );
     name = name.data;
     if (name.message.header.status_code !== 200) return;
@@ -18,7 +18,7 @@ export default class Lyrics extends React.Component {
     this.setState({ name });
 
     let res = await Axios.get(
-      `https://api.musixmatch.com/ws/1.1/track.lyrics.get?apikey=${api_key}&commontrack_id=${id}`
+      `/track.lyrics.get?apikey=${api_key}&commontrack_id=${id}`
     );
     res = res.data;
     if (res.message.header.status_code !== 200) return;

@@ -31,11 +31,12 @@ export default class Results extends React.Component {
 
   async getResults(page) {
     let res = await Axios.get(
-      `https://api.musixmatch.com/ws/1.1/track.search?apikey=${api_key}&q_track=${
-        this.track
-      }&q_artist=${this.artist}&q_lyrics=${
-        this.lyrics
-      }&s_track_rating=desc&page_size=20&page=${page}`
+      `/track.search?apikey=${api_key}&q_track=${this.track}&q_artist=${
+        this.artist
+      }&q_lyrics=${this.lyrics}&s_track_rating=desc&page_size=20&page=${page}`,
+      {
+        headers: { "Access-Control-Allow-Origin": "*" }
+      }
     );
     res = res.data;
     return res;
